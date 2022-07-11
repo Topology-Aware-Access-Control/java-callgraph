@@ -49,12 +49,12 @@ public class MethodVisitor extends EmptyVisitor {
     private String format;
     private List<String> methodCalls = new ArrayList<>();
 
-    public MethodVisitor(MethodGen m, JavaClass jc) {
+    public MethodVisitor(MethodGen m, JavaClass jc, ArrayList<Integer> lineNumbers) {
         visitedClass = jc;
         mg = m;
         cp = mg.getConstantPool();
         format = "M:" + visitedClass.getClassName() + ":" + mg.getName() + "(" + argumentList(mg.getArgumentTypes()) + ")"
-            + " " + "(%s)%s:%s(%s)";
+            + " " + "(%s)%s:%s(%s){" + String.valueOf(lineNumbers.get(0)) + ":" +  String.valueOf(lineNumbers.get(1)) +"}";
     }
 
     private String argumentList(Type[] arguments) {

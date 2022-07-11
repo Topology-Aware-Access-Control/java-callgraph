@@ -32,6 +32,7 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.MethodGen;
@@ -83,9 +84,20 @@ public class ClassVisitor extends EmptyVisitor {
     }
 
     public void visitMethod(Method method) {
+        ArrayList<Integer> lineNumbers = getLineNumbers(method.getLineNumberTable().getLineNumberTable());
         MethodGen mg = new MethodGen(method, clazz.getClassName(), constants);
-        MethodVisitor visitor = new MethodVisitor(mg, clazz);
+        MethodVisitor visitor = new MethodVisitor(mg, clazz, lineNumbers);
         methodCalls.addAll(visitor.start());
+    }
+
+    public ArrayList<Integer> getLineNumbers(LineNumber[] table) {
+        
+        Integer start = table[0].getLineNumber();
+        Integer end = table[table.length - 1].getLineNumber();
+        ArrayList<Integer> res  = new ArrayList<>();
+        res.add(start);
+        res.add(end);
+        return res;
     }
 
     public ClassVisitor start() {
